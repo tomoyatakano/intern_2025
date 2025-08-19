@@ -26,8 +26,7 @@ def get_coords(lonlatdata):
     lon_center = np.mean(lon).squeeze()
     
     distance = np.sqrt(np.square(lat-lat_center) + np.square(lon-lon_center))
-    angle = np.arctan2((lon-lon_center), (lat-lat_center))
-
+    angle = np.arctan2((lat-lat_center), (lon-lon_center))
     outcx = distance*np.cos(angle)
     outcy = distance*np.sin(angle)
 
