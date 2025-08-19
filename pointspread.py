@@ -33,6 +33,26 @@ def get_coords(lonlatdata):
 
     return [nam, outcx, outcy]
     
+def get_latlon(lonlatdata):
+    """ calculate interstation distance and angle
+    引数 : 
+        lonlatdata: station name, lat, lon
+    """
+    lat=[]
+    lon=[]
+    nam=[]
+    with open(lonlatdata,"r") as f:
+        for line in f:
+            nm,la,lo = line.split()
+            lat.append(float(la))
+            lon.append(float(lo))
+            nam.append(nm)
+
+    ##簡易的に緯度経度をxy平面に変換
+    lat = np.array(lat)
+    lon = np.array(lon)
+
+    return nam, lat, lon
 
 def get_psf_wavenumber(cartesianx, cartesiany, klim, kstep):
     """ calculate array response function in wavenumber domain
