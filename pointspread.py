@@ -1,35 +1,37 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Point spread function
-
-Created on Thu Sep 28 18:51:55 2017
-
-@author: tomoya
-"""
 
 import numpy as np
 from scipy.integrate import cumulative_trapezoid
 
 def get_coords(lonlatdata):
     """ calculate interstation distance and angle
-    
     引数 : 
-        lonlatdata: ccffilename,lat,lon
+        lonlatdata: station name, lat, lon
     """
-    datfile = lonlatdata['sta']
-    lat = lonlatdata['x']
-    lon = lonlatdata['y']
+    lat=[]
+    lon=[]
+    nam=[]
+    with open(lonlatdata,"r") as f:
+        for line in f:
+            nm,la,lo = line.split()
+            lat.append(float(la))
+            lon.append(float(lo))
+            nam.append(nm)
+
+    ##簡易的に緯度経度をxy平面に変換
+    lat = np.array(lat)*111
+    lon = np.array(lon)*111
     lat_center = np.mean(lat).squeeze()
     lon_center = np.mean(lon).squeeze()
     
     distance = np.sqrt(np.square(lat-lat_center) + np.square(lon-lon_center))
     angle = np.arctan2((lon-lon_center), (lat-lat_center))
 
-    outcx = distance*np.cos(angle)*0.001 ## m to km
-    outcy = distance*np.sin(angle)*0.001 ## m to km
+    outcx = distance*np.cos(angle)
+    outcy = distance*np.sin(angle)
 
-    return [datfile, outcx, outcy]
+    return [nam, outcx, outcy]
     
 
 def get_psf_wavenumber(cartesianx, cartesiany, klim, kstep):
